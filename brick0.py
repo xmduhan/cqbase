@@ -1,4 +1,6 @@
 import cadquery as cq
+from cadquery import exporters
+from pathlib import Path
 
 # ---------------- Parameters ----------------
 L = 230.0
@@ -35,4 +37,13 @@ result = (
 # Optional: soften outside edges
 result = result.edges("|Z").fillet(EDGE_FILLET)
 
-show_object(result)
+# Show in CQ-editor if available
+try:
+    show_object(result)  # type: ignore  # noqa: F821
+except Exception:
+    pass
+
+# Export STL
+out_path = Path(__file__).with_name("brick0.stl")
+exporters.export(result, str(out_path))
+print(f"Exported: {out_path.resolve()}")
