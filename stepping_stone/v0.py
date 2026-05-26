@@ -12,14 +12,14 @@ height = 90
 slot_width = 40
 slot_depth = 10
 
+# Fillet radius (all edges)
+# 0.2 cm = 2 mm
+fillet_radius = 2
+
 # Build:
 # 1) Create base block
 # 2) Cut the centered slot on the top face
-#
-# Note: The previous version tried to fillet all edges; some CadQuery/OCC
-# combinations can fail edge selection/fillet execution and raise:
-# "There are no suitable edges for chamfer or fillet".
-# The user requirements do NOT request fillets, so we omit filleting.
+# 3) Fillet (round) all edges with radius 2mm
 result = (
     cq.Workplane("XY")
     .box(length, width, height)
@@ -28,6 +28,9 @@ result = (
     .workplane(centerOption="CenterOfMass")
     .rect(length, slot_width)
     .cutBlind(-slot_depth)
+    # Round all edges
+    .edges()
+    .fillet(fillet_radius)
 )
 
 # For CQ-editor / CadQuery GUI
