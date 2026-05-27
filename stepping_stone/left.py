@@ -3,9 +3,9 @@ from cadquery import exporters
 
 # Dimensions in millimeters (CadQuery default)
 # 27 cm = 270 mm, 8 cm = 80 mm, 9 cm = 90 mm
-length = 270
+length = 300
 width = 80
-height = 90
+height = 86.5
 
 # Slot (centered on top face)
 # Slot width = 4 cm = 40 mm
@@ -35,7 +35,7 @@ result = (
 )
 
 # Export STL
-exporters.export(result, "stepping_stone.stl")
+exporters.export(result, "left.stl")
 
 # For CQ-editor / CadQuery GUI
 show_object(result)
