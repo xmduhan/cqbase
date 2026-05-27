@@ -22,7 +22,11 @@ b_wid = 20
 fillet_r = 3
 
 # Build base
-wp = cq.Workplane("XY").box(L, W, H)
+base = cq.Workplane("XY").box(L, W, H)
+
+# Fillet the base block edges first (more robust than filleting after cuts)
+# Use slightly smaller radius to avoid occasional OCC failures on some builds
+base = base.edges().fillet(fillet_r)
 
 # Coordinate convention on top face workplane (centerOption COM):
 # X along length, Y along width.
@@ -41,8 +45,9 @@ ay_center = 0
 bx_center = (-L / 2) + (b_len / 2)  # -20
 by_center = -(b_wid / 2)  # -10
 
+# Cut the two slots
 result = (
-    wp
+    base
     .faces(">Z")
     .workplane(centerOption="CenterOfMass")
     # B-end slot
@@ -55,9 +60,6 @@ result = (
     .center(ax_center, ay_center)
     .rect(a_len, a_wid)
     .cutBlind(-slot_depth)
-    # Fillet all edges
-    .edges()
-    .fillet(fillet_r)
 )
 
 # Export STL
