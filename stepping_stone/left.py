@@ -2,67 +2,44 @@ import cadquery as cq
 from cadquery import exporters
 
 # Units: millimeters (CadQuery default)
-# Base block: 300mm x 80mm x 86.5mm
-L = 300
-W = 80
+
+# --------------------
+# Parameters
+# --------------------
+L = 300.0
+W = 80.0
 H = 86.5
 
-# Slots (top face)
-slot_depth = 10  # depth 10mm
+slot_len = 300.0
+slot_wid = 20.0
+slot_depth = 10.0
 
-# A-end slot (centered), width 40mm, length 40mm
-a_len = 40
-a_wid = 40
+fillet_r = 3.0
 
-# B-end slot (left of centerline), width 20mm, length 260mm
-b_len = 260
-b_wid = 20
+# --------------------
+# Build base solid
+# --------------------
+result = cq.Workplane("XY")
+result = result.box(L, W, H)
 
-# Fillet radius: 3mm
-fillet_r = 3
+# --------------------
+# Cut centered slot on top face
+# --------------------
+wp_top = result.faces(">Z")
+wp_top = wp_top.workplane(centerOption="CenterOfMass")
 
-# Build base
-base = cq.Workplane("XY").box(L, W, H)
+wp_slot = wp_top.rect(slot_len, slot_wid)
+result = wp_slot.cutBlind(-slot_depth)
 
-# Fillet the base block edges first (more robust than filleting after cuts)
-# Use slightly smaller radius to avoid occasional OCC failures on some builds
-base = base.edges().fillet(fillet_r)
+# --------------------
+# Fillet all edges (including slot edges)
+# --------------------
+all_edges = result.edges()
+result = all_edges.fillet(fillet_r)
 
-# Coordinate convention on top face workplane (centerOption COM):
-# X along length, Y along width.
-# "Left side" interpreted as negative Y.
-
-# Place slots so they are connected (overlap in X):
-# B slot spans x in [-L/2, -L/2 + b_len] = [-150, 110]
-# A slot near +X end spans x in [L/2 - a_len, L/2] = [110, 150]
-# They touch/meet at x=110.
-
-# A-end slot placement: centered in Y, near the +X end.
-ax_center = (L / 2) - (a_len / 2)  # 130
-ay_center = 0
-
-# B-end slot placement: shifted left so its right edge lies on Y=0 centerline.
-bx_center = (-L / 2) + (b_len / 2)  # -20
-by_center = -(b_wid / 2)  # -10
-
-# Cut the two slots
-result = (
-    base
-    .faces(">Z")
-    .workplane(centerOption="CenterOfMass")
-    # B-end slot
-    .center(bx_center, by_center)
-    .rect(b_len, b_wid)
-    .cutBlind(-slot_depth)
-    # A-end slot
-    .faces(">Z")
-    .workplane(centerOption="CenterOfMass")
-    .center(ax_center, ay_center)
-    .rect(a_len, a_wid)
-    .cutBlind(-slot_depth)
-)
-
+# --------------------
 # Export STL
+# --------------------
 exporters.export(result, "left.stl")
 
 # For CQ-editor / CadQuery GUI
