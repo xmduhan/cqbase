@@ -8,7 +8,7 @@ from cadquery import exporters
 # --------------------
 L = 300.0
 W = 80.0
-H = 85.5
+H = 75.5
 
 slot_len = 300.0
 slot_wid = 40.0
@@ -40,7 +40,7 @@ result = edges.fillet(fillet_r)
 # --------------------
 # Export STL
 # --------------------
-exporters.export(result, "left.stl")
+exporters.export(result, "right.stl")
 
 # For CQ-editor / CadQuery GUI
 show_object(result)
