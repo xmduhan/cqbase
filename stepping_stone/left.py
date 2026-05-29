@@ -8,7 +8,7 @@ from cadquery import exporters
 # --------------------
 L = 300.0
 W = 80.0
-H = 85.0
+H = 85.5
 
 slot_len = 300.0
 slot_wid = 40.0
