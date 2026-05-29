@@ -8,10 +8,10 @@ from cadquery import exporters
 # --------------------
 L = 300.0
 W = 80.0
-H = 86.5
+H = 85.0
 
 slot_len = 300.0
-slot_wid = 20.0
+slot_wid = 40.0
 slot_depth = 10.0
 
 fillet_r = 3.0
@@ -28,14 +28,14 @@ result = result.box(L, W, H)
 wp_top = result.faces(">Z")
 wp_top = wp_top.workplane(centerOption="CenterOfMass")
 
-wp_slot = wp_top.rect(slot_len, slot_wid)
-result = wp_slot.cutBlind(-slot_depth)
+wp_slot_profile = wp_top.rect(slot_len, slot_wid)
+result = wp_slot_profile.cutBlind(-slot_depth)
 
 # --------------------
 # Fillet all edges (including slot edges)
 # --------------------
-all_edges = result.edges()
-result = all_edges.fillet(fillet_r)
+edges = result.edges()
+result = edges.fillet(fillet_r)
 
 # --------------------
 # Export STL
