@@ -88,8 +88,11 @@ for e in edge_list:
         ).fillet(fillet_r)
     except:
         pass
-
 # edges = result.edges()
 # result = edges.fillet(fillet_r)
 
+exporters.export(result, "test.stl")
+
 show_object(result)
+
+
