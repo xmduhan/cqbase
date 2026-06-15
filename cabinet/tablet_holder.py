@@ -44,42 +44,64 @@ result = (
     .cutThruAll()
 )
 
-rects = []
+# rects = []
+# for i in range(5):
+#     rects.append(
+#         result.faces(">X")
+#         .center(slot_border * (i + 1) + slot_wid * i, 0)
+#         .polyline(rect).close()
+#     )
+# result.add(rects)
+# result = result.cutThruAll()
+
+# result = rects[0].cutThruAll()
+
+
 for i in range(5):
-    rects.append(
+    result.add(
         result.faces(">X")
         .center(slot_border * (i + 1) + slot_wid * i, 0)
         .polyline(rect).close()
     )
+    result = result.cutThruAll()
+# result = result.cutThruAll()
+# result = result.cutThruAll()
 
-result = rects[0].cutThruAll()
-
-result = (
-    result.faces(">X")
-    .workplane(centerOption="CenterOfBoundBox")
-    .box(W, H, slot_border)
-)
-
-result = (
-    result.faces("<X")
-    .workplane(centerOption="CenterOfBoundBox")
-    .box(W, H, slot_border)
-)
-
-result = (
-    result.faces("Y")
-    .workplane(centerOption="CenterOfBoundBox")
-    .box(L + slot_border, H , slot_border)
-)
-
-result = (
-    result.faces("<Z")
-    .workplane(centerOption="CenterOfBoundBox")
-    .box(L + slot_border, W + slot_border / 2, slot_border)
-)
+# result = result.cutThruAll()
 
 
-result = result.faces(">Z").edges().fillet(fillet_r)
+# result = (
+#     result.faces(">X")
+#     .center([(slot_border * (i + 1) + slot_wid * i, 0) for i in range(5)])
+#     .polyline(rect).close()
+# )
+
+# result = (
+#     result.faces(">X")
+#     .workplane(centerOption="CenterOfBoundBox")
+#     .box(W, H, slot_border)
+# )
+
+# result = (
+#     result.faces("<X")
+#     .workplane(centerOption="CenterOfBoundBox")
+#     .box(W, H, slot_border)
+# )
+
+# result = (
+#     result.faces("Y")
+#     .workplane(centerOption="CenterOfBoundBox")
+#     .box(L + slot_border, H , slot_border)
+# )
+
+# result = (
+#     result.faces("<Z")
+#     .workplane(centerOption="CenterOfBoundBox")
+#     .box(L + slot_border, W + slot_border / 2, slot_border)
+# )
+
+
+# result = result.faces(">Z").edges().fillet(fillet_r)
 
 
 # show_object(result)
